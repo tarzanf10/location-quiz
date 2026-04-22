@@ -2,9 +2,11 @@
 <div id="question"></div>
 <div id="options"></div>
 <script>
-const baseURL = '{{ .Site.BaseURL }}';
-fetch(baseURL + 'questions.json')
-  .then(response => response.json())
+fetch('./questions.json')
+  .then(response => {
+    if (!response.ok) throw new Error('Failed to load questions');
+    return response.json();
+  })
   .then(questions => {
     const qMap = {};
     questions.forEach(q => qMap[q.id] = q);
@@ -61,6 +63,10 @@ fetch(baseURL + 'questions.json')
       showQuestion(getQidFromHash());
     };
   })
-  .catch(error => console.error('Error loading questions:', error));
+  .catch(error => {
+    console.error('Error loading questions:', error);
+    document.getElementById('question').innerHTML = '<h2>Error</h2>';
+    document.getElementById('options').innerHTML = '<p>Failed to load quiz data. Please refresh the page.</p>';
+  });
 </script>
 {{- end -}}
