@@ -17,12 +17,29 @@ fetch(baseURL + 'questions.json')
         return;
       }
       document.getElementById('question').innerHTML = `<h2>${q.question}</h2>`;
-      const opts = q.options.map((opt, i) => `<button onclick="check(${i}, ${q.correct}, ${q.next})">${opt}</button>`).join('');
-      document.getElementById('options').innerHTML = opts;
+      if (q.type === 'multiple') {
+        const opts = q.options.map((opt, i) => `<button onclick="check(${i}, ${q.correct}, ${q.next})">${opt}</button>`).join('');
+        document.getElementById('options').innerHTML = opts;
+      } else if (q.type === 'text') {
+        document.getElementById('options').innerHTML = '<input type="text" id="answerInput" placeholder="Type your answer here"><button onclick="checkText(\'' + q.correctAnswer + '\', ' + q.next + ')">Submit</button>';
+      }
     }
     
     window.check = function(selected, correct, next) {
       if (selected === correct) {
+        if (next) {
+          window.location.hash = `#q${next}`;
+        } else {
+          showQuestion(null);
+        }
+      } else {
+        alert('Wrong answer! Try again.');
+      }
+    };
+    
+    window.checkText = function(correctAnswer, next) {
+      const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
+      if (userAnswer === correctAnswer.toLowerCase()) {
         if (next) {
           window.location.hash = `#q${next}`;
         } else {
