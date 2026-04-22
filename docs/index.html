@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta name="generator" content="Hugo 0.160.1"><script src="/location-quiz/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=location-quiz/livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Quiz | Location Quiz</title>
+</head>
+<body>
+    <main>
+        <div id="question"></div>
+<div id="options"></div>
+<script>
+fetch('/questions.json')
+  .then(response => response.json())
+  .then(questions => {
+    const qMap = {};
+    questions.forEach(q => qMap[q.id] = q);
+    
+    function showQuestion(id) {
+      const q = qMap[id];
+      if (!q) {
+        document.getElementById('question').innerHTML = '<h2>Quiz Complete!</h2><p>Congratulations!</p>';
+        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'#q1\'">Restart Quiz</button>';
+        return;
+      }
+      document.getElementById('question').innerHTML = `<h2>${q.question}</h2>`;
+      const opts = q.options.map((opt, i) => `<button onclick="check(${i}, ${q.correct}, ${q.next})">${opt}</button>`).join('');
+      document.getElementById('options').innerHTML = opts;
+    }
+    
+    window.check = function(selected, correct, next) {
+      if (selected === correct) {
+        if (next) {
+          window.location.hash = `#q${next}`;
+        } else {
+          showQuestion(null);
+        }
+      } else {
+        alert('Wrong answer! Try again.');
+      }
+    };
+    
+    function getQidFromHash() {
+      const hash = window.location.hash;
+      return hash ? parseInt(hash.slice(2)) : 1;
+    }
+    
+    showQuestion(getQidFromHash());
+    
+    window.onhashchange = () => {
+      showQuestion(getQidFromHash());
+    };
+  })
+  .catch(error => console.error('Error loading questions:', error));
+</script>
+    </main>
+</body>
+</html>
