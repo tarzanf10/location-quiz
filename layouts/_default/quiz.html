@@ -11,14 +11,19 @@ fetch('./questions.json')
     const qMap = {};
     questions.forEach(q => qMap[q.id] = q);
     
+    function showHome() {
+      document.getElementById('question').innerHTML = '<h1>Location Quiz</h1><p>Test your geography knowledge!</p>';
+      document.getElementById('options').innerHTML = '<button class="start-btn" onclick="window.location.hash = \'#q1\'">Start Quiz</button>';
+    }
+    
     function showQuestion(id) {
       const q = qMap[id];
       if (!q) {
-        document.getElementById('question').innerHTML = '<h2>Quiz Complete!</h2><p>Congratulations!</p>';
-        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'#q1\'">Restart Quiz</button>';
+        document.getElementById('question').innerHTML = '<h2>Quiz Complete!</h2><p>Congratulations! You answered all questions correctly!</p>';
+        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Home</button>';
         return;
       }
-      document.getElementById('question').innerHTML = `<h2>${q.question}</h2>`;
+      document.getElementById('question').innerHTML = `<h2>Question ${id}</h2><p>${q.question}</p>`;
       if (q.type === 'multiple') {
         const opts = q.options.map((opt, i) => `<button onclick="check(${i}, ${q.correct}, ${q.next})">${opt}</button>`).join('');
         document.getElementById('options').innerHTML = opts;
@@ -54,13 +59,22 @@ fetch('./questions.json')
     
     function getQidFromHash() {
       const hash = window.location.hash;
-      return hash ? parseInt(hash.slice(2)) : 1;
+      return hash ? parseInt(hash.slice(2)) : null;
     }
     
-    showQuestion(getQidFromHash());
+    function renderPage() {
+      const qid = getQidFromHash();
+      if (qid === null) {
+        showHome();
+      } else {
+        showQuestion(qid);
+      }
+    }
+    
+    renderPage();
     
     window.onhashchange = () => {
-      showQuestion(getQidFromHash());
+      renderPage();
     };
   })
   .catch(error => {
