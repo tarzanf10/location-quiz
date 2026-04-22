@@ -2,12 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/location-quiz/categories/</loc>
+    <loc>https://tarzanf10.github.io/location-quiz/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/location-quiz/</loc>
+    <loc>https://tarzanf10.github.io/location-quiz/</loc>
   </url><url>
-    <loc>http://localhost:1313/location-quiz/editor/</loc>
+    <loc>https://tarzanf10.github.io/location-quiz/editor/</loc>
   </url><url>
-    <loc>http://localhost:1313/location-quiz/tags/</loc>
+    <loc>https://tarzanf10.github.io/location-quiz/tags/</loc>
   </url>
 </urlset>
