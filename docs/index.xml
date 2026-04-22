@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Location Quiz</title>
-    <link>http://localhost:1313/location-quiz/</link>
+    <link>https://tarzanf10.github.io/location-quiz/</link>
     <description>Recent content on Location Quiz</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <atom:link href="http://localhost:1313/location-quiz/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://tarzanf10.github.io/location-quiz/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

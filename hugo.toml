@@ -1,4 +1,4 @@
-baseURL = 'https://username.github.io/location-quiz/'
+baseURL = 'https://tarzanf10.github.io/location-quiz/'
 locale = 'en-us'
 title = 'Location Quiz'
 publishDir = 'docs'

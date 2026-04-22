@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-	<meta name="generator" content="Hugo 0.160.1"><script src="/location-quiz/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=location-quiz/livereload" data-no-instant defer></script>
+	<meta name="generator" content="Hugo 0.160.1">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Location Quiz | Location Quiz</title>
@@ -11,7 +11,8 @@
         <div id="question"></div>
 <div id="options"></div>
 <script>
-fetch('/questions.json')
+const baseURL = 'https:\/\/tarzanf10.github.io\/location-quiz\/';
+fetch(baseURL + 'questions.json')
   .then(response => response.json())
   .then(questions => {
     const qMap = {};
