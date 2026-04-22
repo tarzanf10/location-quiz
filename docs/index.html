@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Location Quiz | Location Quiz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -50,6 +52,22 @@
             border-radius: 8px;
             margin: 20px 0;
             border-left: 4px solid #007bff;
+        }
+        #map {
+            height: 350px;
+            width: 100%;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .coordinates {
+            font-size: 12px;
+            color: #666;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
         }
         #question {
             margin-bottom: 20px;
@@ -141,14 +159,23 @@
             #options {
                 gap: 10px;
             }
+            #map {
+                height: 250px;
+            }
+            .coordinates {
+                font-size: 11px;
+            }
         }
     </style>
 </head>
 <body>
     <main>
         <div id="question"></div>
+<div id="map-container"></div>
 <div id="options"></div>
 <script>
+let mapInstance = null;
+
 fetch('./questions.json')
   .then(response => {
     if (!response.ok) throw new Error('Failed to load questions');
@@ -157,10 +184,10 @@ fetch('./questions.json')
   .then(questions => {
     const qMap = {};
     questions.forEach(q => qMap[q.id] = q);
-    let currentRewardId = null;
     
     function showHome() {
       document.getElementById('question').innerHTML = '<h1>Location Quiz</h1><p>Test your geography knowledge!</p>';
+      document.getElementById('map-container').innerHTML = '';
       document.getElementById('options').innerHTML = '<button class="start-btn" onclick="window.location.hash = \'#q1\'">Start Quiz</button>';
     }
     
@@ -174,9 +201,25 @@ fetch('./questions.json')
           <h3 style="margin-top: 0; color: #0056b3;">${q.reward.title}</h3>
           <p>${q.reward.description}</p>
           <p style="color: #666; font-weight: bold;">📍 ${q.reward.address}</p>
+          <div class="coordinates">Latitude: ${q.reward.lat}<br>Longitude: ${q.reward.lng}</div>
         </div>
       `;
       document.getElementById('question').innerHTML = rewardHTML;
+      
+      
+      document.getElementById('map-container').innerHTML = '<div id="map"></div>';
+      
+      
+      setTimeout(() => {
+        if (mapInstance) mapInstance.remove();
+        mapInstance = L.map('map').setView([q.reward.lat, q.reward.lng], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors',
+          maxZoom: 19
+        }).addTo(mapInstance);
+        L.marker([q.reward.lat, q.reward.lng]).addTo(mapInstance)
+          .bindPopup('<b>' + q.reward.title + '</b>').openPopup();
+      }, 100);
       
       if (q.next) {
         document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'#q' + q.next + '\'">Continue to Next Question</button>';
@@ -189,10 +232,12 @@ fetch('./questions.json')
       const q = qMap[id];
       if (!q) {
         document.getElementById('question').innerHTML = '<h2>Quiz Complete!</h2><p>You\'ve earned all the location rewards!</p>';
+        document.getElementById('map-container').innerHTML = '';
         document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Home</button>';
         return;
       }
       document.getElementById('question').innerHTML = `<h2>Question ${id}</h2><p>${q.question}</p>`;
+      document.getElementById('map-container').innerHTML = '';
       if (q.type === 'multiple') {
         const opts = q.options.map((opt, i) => `<button onclick="check(${i}, ${q.correct}, ${id})">${opt}</button>`).join('');
         document.getElementById('options').innerHTML = opts;
@@ -203,7 +248,6 @@ fetch('./questions.json')
     
     window.check = function(selected, correct, qid) {
       if (selected === correct) {
-        currentRewardId = qid;
         window.location.hash = `#reward${qid}`;
       } else {
         alert('Wrong answer! Try again.');
@@ -213,7 +257,6 @@ fetch('./questions.json')
     window.checkText = function(correctAnswer, qid) {
       const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
       if (userAnswer === correctAnswer.toLowerCase()) {
-        currentRewardId = qid;
         window.location.hash = `#reward${qid}`;
       } else {
         alert('Wrong answer! Try again.');
@@ -254,6 +297,7 @@ fetch('./questions.json')
   .catch(error => {
     console.error('Error loading questions:', error);
     document.getElementById('question').innerHTML = '<h2>Error</h2>';
+    document.getElementById('map-container').innerHTML = '';
     document.getElementById('options').innerHTML = '<p>Failed to load quiz data. Please refresh the page.</p>';
   });
 </script>
