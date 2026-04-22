@@ -10,64 +10,91 @@ fetch('./questions.json')
   .then(questions => {
     const qMap = {};
     questions.forEach(q => qMap[q.id] = q);
+    let currentRewardId = null;
     
     function showHome() {
       document.getElementById('question').innerHTML = '<h1>Location Quiz</h1><p>Test your geography knowledge!</p>';
       document.getElementById('options').innerHTML = '<button class="start-btn" onclick="window.location.hash = \'#q1\'">Start Quiz</button>';
     }
     
+    function showReward(qid) {
+      const q = qMap[qid];
+      if (!q || !q.reward) return;
+      
+      const rewardHTML = `
+        <h2>Correct! 🎉</h2>
+        <div style="background-color: #e7f3ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
+          <h3 style="margin-top: 0; color: #0056b3;">${q.reward.title}</h3>
+          <p>${q.reward.description}</p>
+          <p style="color: #666; font-weight: bold;">📍 ${q.reward.address}</p>
+        </div>
+      `;
+      document.getElementById('question').innerHTML = rewardHTML;
+      
+      if (q.next) {
+        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'#q' + q.next + '\'">Continue to Next Question</button>';
+      } else {
+        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Home</button>';
+      }
+    }
+    
     function showQuestion(id) {
       const q = qMap[id];
       if (!q) {
-        document.getElementById('question').innerHTML = '<h2>Quiz Complete!</h2><p>Congratulations! You answered all questions correctly!</p>';
+        document.getElementById('question').innerHTML = '<h2>Quiz Complete!</h2><p>You\'ve earned all the location rewards!</p>';
         document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Home</button>';
         return;
       }
       document.getElementById('question').innerHTML = `<h2>Question ${id}</h2><p>${q.question}</p>`;
       if (q.type === 'multiple') {
-        const opts = q.options.map((opt, i) => `<button onclick="check(${i}, ${q.correct}, ${q.next})">${opt}</button>`).join('');
+        const opts = q.options.map((opt, i) => `<button onclick="check(${i}, ${q.correct}, ${id})">${opt}</button>`).join('');
         document.getElementById('options').innerHTML = opts;
       } else if (q.type === 'text') {
-        document.getElementById('options').innerHTML = '<input type="text" id="answerInput" placeholder="Type your answer here"><button onclick="checkText(\'' + q.correctAnswer + '\', ' + q.next + ')">Submit</button>';
+        document.getElementById('options').innerHTML = '<input type="text" id="answerInput" placeholder="Type your answer here"><button onclick="checkText(\'' + q.correctAnswer.replace(/'/g, "\\'") + '\', ' + id + ')">Submit</button>';
       }
     }
     
-    window.check = function(selected, correct, next) {
+    window.check = function(selected, correct, qid) {
       if (selected === correct) {
-        if (next) {
-          window.location.hash = `#q${next}`;
-        } else {
-          showQuestion(null);
-        }
+        currentRewardId = qid;
+        window.location.hash = `#reward${qid}`;
       } else {
         alert('Wrong answer! Try again.');
       }
     };
     
-    window.checkText = function(correctAnswer, next) {
+    window.checkText = function(correctAnswer, qid) {
       const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
       if (userAnswer === correctAnswer.toLowerCase()) {
-        if (next) {
-          window.location.hash = `#q${next}`;
-        } else {
-          showQuestion(null);
-        }
+        currentRewardId = qid;
+        window.location.hash = `#reward${qid}`;
       } else {
         alert('Wrong answer! Try again.');
       }
     };
     
-    function getQidFromHash() {
+    function parseHash() {
       const hash = window.location.hash;
-      return hash ? parseInt(hash.slice(2)) : null;
+      if (!hash) return { type: 'home' };
+      if (hash.startsWith('#reward')) {
+        const qid = parseInt(hash.slice(7));
+        return { type: 'reward', qid };
+      }
+      if (hash.startsWith('#q')) {
+        const qid = parseInt(hash.slice(2));
+        return { type: 'question', qid };
+      }
+      return { type: 'home' };
     }
     
     function renderPage() {
-      const qid = getQidFromHash();
-      if (qid === null) {
+      const page = parseHash();
+      if (page.type === 'home') {
         showHome();
-      } else {
-        showQuestion(qid);
+      } else if (page.type === 'question') {
+        showQuestion(page.qid);
+      } else if (page.type === 'reward') {
+        showReward(page.qid);
       }
     }
     

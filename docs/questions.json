@@ -5,21 +5,36 @@
     "question": "What is the capital of France?",
     "options": ["London", "Paris", "Berlin", "Madrid"],
     "correct": 1,
-    "next": 2
+    "next": 2,
+    "reward": {
+      "title": "Windsor Castle",
+      "description": "A royal residence in the charming town of Windsor. The oldest and largest occupied castle in the world, with stunning views of the River Thames.",
+      "address": "Windsor, Berkshire"
+    }
   },
   {
     "id": 2,
     "type": "text",
     "question": "Which continent is Australia in?",
     "correctAnswer": "Australia",
-    "next": 3
+    "next": 3,
+    "reward": {
+      "title": "LEGOLAND Windsor",
+      "description": "A fantastic amusement park built around LEGO. Perfect for families with over 55 million LEGO bricks used in the attractions!",
+      "address": "Windsor, Berkshire"
+    }
   },
   {
     "id": 3,
     "type": "text",
     "question": "What is the largest ocean?",
     "correctAnswer": "Pacific",
-    "next": 4
+    "next": 4,
+    "reward": {
+      "title": "Ascot Racecourse",
+      "description": "Famous horse racing venue known worldwide. Host to the Royal Ascot, one of the most prestigious horse racing events in the world.",
+      "address": "Ascot, Berkshire"
+    }
   },
   {
     "id": 4,
@@ -27,6 +42,11 @@
     "question": "What is 2 + 2?",
     "options": ["3", "4", "5", "6"],
     "correct": 1,
-    "next": null
+    "next": null,
+    "reward": {
+      "title": "Runnymede",
+      "description": "Historic meadow where the Magna Carta was signed in 1215. A beautiful riverside location with monuments and walking trails.",
+      "address": "Runnymede, Berkshire"
+    }
   }
 ]
