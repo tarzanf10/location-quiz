@@ -30,7 +30,14 @@ fetch('./questions.json')
           <h3 style="margin-top: 0; color: #0056b3;">${q.reward.title}</h3>
           <p>${q.reward.description}</p>
           <p style="color: #666; font-weight: bold;">📍 ${q.reward.address}</p>
-          <div class="coordinates">Latitude: ${q.reward.lat}<br>Longitude: ${q.reward.lng}</div>
+          <div class="coordinates">
+            <strong>Coordinates:</strong><br>
+            Latitude: ${q.reward.lat}<br>
+            Longitude: ${q.reward.lng}<br>
+            <br>
+            <strong>OS Grid Reference:</strong><br>
+            ${q.reward.osGrid}
+          </div>
         </div>
       `;
       document.getElementById('question').innerHTML = rewardHTML;

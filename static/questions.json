@@ -11,7 +11,8 @@
       "description": "Historic Norman castle ruins dating back to 1066. A fascinating piece of English history set in beautiful grounds by the town.",
       "address": "Berkhamsted, Hertfordshire",
       "lat": 51.7652,
-      "lng": -0.5621
+      "lng": -0.5621,
+      "osGrid": "SP 987 079"
     }
   },
   {
@@ -25,7 +26,8 @@
       "description": "The vibrant heart of Berkhamsted town! Lined with independent shops, cafes, and restaurants showcasing local character and charm.",
       "address": "Berkhamsted, Hertfordshire",
       "lat": 51.7634,
-      "lng": -0.5639
+      "lng": -0.5639,
+      "osGrid": "SP 997 062"
     }
   },
   {
@@ -39,7 +41,8 @@
       "description": "Outdoor swimming pool and sports facilities set in a beautiful, open park. Perfect for enjoying the outdoors in Berkhamsted.",
       "address": "Berkhamsted, Hertfordshire",
       "lat": 51.7589,
-      "lng": -0.5678
+      "lng": -0.5678,
+      "osGrid": "SP 974 059"
     }
   },
   {
@@ -54,7 +57,8 @@
       "description": "Beautiful park featuring lovely water gardens, walking paths, and green spaces. A peaceful retreat in the heart of Berkhamsted.",
       "address": "Berkhamsted, Hertfordshire",
       "lat": 51.7612,
-      "lng": -0.5681
+      "lng": -0.5681,
+      "osGrid": "SP 979 056"
     }
   }
 ]
