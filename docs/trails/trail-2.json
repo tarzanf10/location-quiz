@@ -1,0 +1,99 @@
+{
+  "name": "Heritage Trail",
+  "description": "Explore the history of Berkhamsted's most famous landmarks",
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple",
+      "question": "Look at the War Memorial on the High Street. How many names are listed on the main front face under the First World War heading?",
+      "options": ["Fewer than 50", "50 to 100", "More than 100", "There are no names listed"],
+      "correct": 1,
+      "reward": {
+        "title": "Berkhamsted Castle",
+        "description": "Head to the castle ruins at the end of Castle Street. Look at the English Heritage information board near the entrance gate.",
+        "address": "Castle Street, Berkhamsted, HP4 1LJ",
+        "lat": 51.7627,
+        "lng": -0.5641,
+        "osGrid": "SP 996 082",
+        "w3w": "///wider.rated.sleeps"
+      },
+      "next": 2
+    },
+    {
+      "id": 2,
+      "type": "multiple",
+      "question": "You are at Berkhamsted Castle. According to the English Heritage information board, which famous royal event took place here in 1066 shortly after the Battle of Hastings?",
+      "options": [
+        "King Harold was crowned here",
+        "The English nobles surrendered to William the Conqueror here",
+        "The Domesday Book was written here",
+        "William the Conqueror was buried here"
+      ],
+      "correct": 1,
+      "reward": {
+        "title": "St Peter's Church",
+        "description": "Walk along the High Street towards St Peter's Church. Look at the noticeboard on the boundary wall near the main gate for the answer to the next question.",
+        "address": "High Street, Berkhamsted, HP4 2DJ",
+        "lat": 51.7618,
+        "lng": -0.5627,
+        "osGrid": "SP 997 081",
+        "w3w": "///smart.grabs.nerve"
+      },
+      "next": 3
+    },
+    {
+      "id": 3,
+      "type": "text",
+      "question": "You are at St Peter's Church. Look at the stone archway above the main entrance door. What is carved into the stonework — a letter, a symbol, or a date?",
+      "correctAnswer": "cross",
+      "reward": {
+        "title": "The Rex Cinema",
+        "description": "Walk along the High Street towards the Rex Cinema — one of the oldest working cinemas in the UK. Look at the front of the building for the answer to the next question.",
+        "address": "High Street, Berkhamsted, HP4 1AJ",
+        "lat": 51.7622,
+        "lng": -0.5613,
+        "osGrid": "SP 998 082",
+        "w3w": "///fires.ropes.helps"
+      },
+      "next": 4
+    },
+    {
+      "id": 4,
+      "type": "multiple",
+      "question": "You are outside the Rex Cinema. What is shown on the decorative tiled or stone panel above the main entrance?",
+      "options": [
+        "A theatre mask",
+        "The name REX in large letters",
+        "A film reel",
+        "A royal crest"
+      ],
+      "correct": 1,
+      "reward": {
+        "title": "Berkhamsted Town Hall",
+        "description": "The old Town Hall building is nearby on the High Street. Look for the clock tower and find the year inscribed on the building facade.",
+        "address": "High Street, Berkhamsted, HP4 1HJ",
+        "lat": 51.7623,
+        "lng": -0.562,
+        "osGrid": "SP 997 082",
+        "w3w": "///chill.wider.smile"
+      },
+      "next": 5
+    },
+    {
+      "id": 5,
+      "type": "text",
+      "question": "You are at the Town Hall. Look at the building facade or clock tower. What four-digit year is displayed on the building?",
+      "correctAnswer": "1859",
+      "reward": {
+        "title": "Berkhamsted War Memorial",
+        "description": "Return to the War Memorial where you started — you've completed the Heritage Trail! Well done! 🏆",
+        "address": "High Street, Berkhamsted, HP4 1HH",
+        "lat": 51.7621,
+        "lng": -0.5619,
+        "osGrid": "SP 997 082",
+        "w3w": "///chill.wider.smile"
+      },
+      "next": null
+    }
+  ]
+}

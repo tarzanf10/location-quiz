@@ -175,131 +175,229 @@
 <div id="options"></div>
 <script>
 let mapInstance = null;
+let trailManifest = []; // [{id, name, description}]
 
-fetch('./questions.json')
-  .then(response => {
-    if (!response.ok) throw new Error('Failed to load questions');
-    return response.json();
+// Get trail number from URL search params (e.g., ?trail=2)
+const urlParams = new URLSearchParams(window.location.search);
+const hasTrailParam = urlParams.has('trail');
+const selectedTrail = parseInt(urlParams.get('trail') || '1');
+
+// Load trails/trails.json (array of filenames), then load all trail files.
+// Each trail file: { name, description, questions: [...] }
+fetch('./trails/trails.json')
+  .then(r => r.json())
+  .catch(() => ['trail-1.json'])
+  .then(files => Promise.all(
+    files.map((file, i) =>
+      fetch('./trails/' + file)
+        .then(r => r.json())
+        .then(d => ({ id: i + 1, name: d.name || `Trail ${i + 1}`, description: d.description || '', questions: Array.isArray(d) ? d : (d.questions || []) }))
+        .catch(() => ({ id: i + 1, name: `Trail ${i + 1}`, description: '', questions: [] }))
+    )
+  ))
+  .then(allTrails => {
+    trailManifest = allTrails.map(({ id, name, description }) => ({ id, name, description }));
+    const trail = allTrails.find(t => t.id === selectedTrail) || allTrails[0];
+    const questions = trail ? trail.questions : [];
+    if (!questions.length) throw new Error('No questions found for this trail');
+    return questions;
   })
   .then(questions => {
     const qMap = {};
     questions.forEach(q => qMap[q.id] = q);
     
-    function showHome() {
-      document.getElementById('question').innerHTML = '<h1>Location Quiz</h1><p>Test your geography knowledge!</p>';
-      document.getElementById('map-container').innerHTML = '';
-      document.getElementById('options').innerHTML = '<button class="start-btn" onclick="window.location.hash = \'#q1\'">Start Quiz</button>';
+    // Build ordered trail by following next-chain from the first question
+    function buildTrailOrder() {
+      const referencedIds = new Set(questions.map(q => q.next).filter(Boolean));
+      const first = questions.find(q => !referencedIds.has(q.id));
+      const order = [];
+      let cur = first;
+      while (cur) {
+        order.push(cur.id);
+        cur = cur.next ? qMap[cur.next] : null;
+      }
+      return order.length === questions.length ? order : questions.map(q => q.id);
     }
-    
-    function showReward(qid) {
-      const q = qMap[qid];
-      if (!q || !q.reward) return;
-      
-      const rewardHTML = `
-        <h2>Correct! 🎉</h2>
-        <div style="background-color: #e7f3ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
-          <h3 style="margin-top: 0; color: #0056b3;">${q.reward.title}</h3>
-          <p>${q.reward.description}</p>
-          <p style="color: #666; font-weight: bold;">📍 ${q.reward.address}</p>
-          <div class="coordinates">
-            <strong>Coordinates:</strong><br>
-            Latitude: ${q.reward.lat}<br>
-            Longitude: ${q.reward.lng}<br>
-            <br>
-            <strong>OS Grid Reference:</strong><br>
-            ${q.reward.osGrid}
-          </div>
-        </div>
-      `;
-      document.getElementById('question').innerHTML = rewardHTML;
-      
-      
-      document.getElementById('map-container').innerHTML = '<div id="map"></div>';
-      
-      
-      setTimeout(() => {
-        if (mapInstance) mapInstance.remove();
-        mapInstance = L.map('map').setView([q.reward.lat, q.reward.lng], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors',
-          maxZoom: 19
-        }).addTo(mapInstance);
-        L.marker([q.reward.lat, q.reward.lng]).addTo(mapInstance)
-          .bindPopup('<b>' + q.reward.title + '</b>').openPopup();
-      }, 100);
-      
-      if (q.next) {
-        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'#q' + q.next + '\'">Continue to Next Question</button>';
+
+    const forwardOrder = buildTrailOrder();
+    const reverseOrder = [...forwardOrder].reverse();
+    const n = forwardOrder.length;
+
+    function getRewardForIndex(dir, i) {
+      if (dir === 'f') {
+        return qMap[forwardOrder[i]] ? qMap[forwardOrder[i]].reward : null;
       } else {
-        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Home</button>';
+        const fi = n - 3 - i;
+        return (fi >= 0 && qMap[forwardOrder[fi]]) ? qMap[forwardOrder[fi]].reward : null;
       }
     }
-    
-    function showQuestion(id) {
-      const q = qMap[id];
-      if (!q) {
-        document.getElementById('question').innerHTML = '<h2>Quiz Complete!</h2><p>You\'ve earned all the location rewards!</p>';
+
+    function showRewardLocation(reward, nextHash, isLast) {
+      if (!reward) {
+        document.getElementById('question').innerHTML = '<h2>Trail Complete! 🏁</h2><p>You have made it all the way around town!</p>';
         document.getElementById('map-container').innerHTML = '';
-        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Home</button>';
+        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Start</button>';
         return;
       }
-      document.getElementById('question').innerHTML = `<h2>Question ${id}</h2><p>${q.question}</p>`;
+      const w3w = reward.w3w || reward.what3words || reward.what3Words;
+      const w3wLine = w3w
+        ? `<div style="margin-top:8px;"><strong>What3Words:</strong> <a href="https://what3words.com/${String(w3w).replace('///','')}" target="_blank" style="color:#e11f26;">${w3w}</a></div>`
+        : '';
+      const html = `
+        <h2>Correct — here is your next stop 🎉</h2>
+        <p>Head to this location in town. Once you arrive, you should be able to find the answer to the next question.</p>
+        <div style="background-color: #e7f3ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
+          <h3 style="margin-top: 0; color: #0056b3;">${reward.title}</h3>
+          <p>${reward.description}</p>
+          <p style="color: #666; font-weight: bold;">📍 ${reward.address}</p>
+          <div class="coordinates">
+            <strong>Coordinates:</strong><br>
+            Latitude: ${reward.lat}<br>
+            Longitude: ${reward.lng}<br>
+            <br>
+            <strong>OS Grid Reference:</strong> ${reward.osGrid}
+            ${w3wLine}
+          </div>
+        </div>`;
+      document.getElementById('question').innerHTML = html;
+      document.getElementById('map-container').innerHTML = '<div id="map"></div>';
+      setTimeout(() => {
+        if (mapInstance) mapInstance.remove();
+        mapInstance = L.map('map').setView([reward.lat, reward.lng], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors', maxZoom: 19
+        }).addTo(mapInstance);
+        L.marker([reward.lat, reward.lng]).addTo(mapInstance)
+          .bindPopup('<b>' + reward.title + '</b>').openPopup();
+      }, 100);
+      if (isLast) {
+        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Finish Trail</button>';
+      } else {
+        document.getElementById('options').innerHTML =
+          '<button onclick="window.location.hash = \'' + nextHash + '\'">I\'m ready for the next question</button>';
+      }
+    }
+
+    function showQuestion(dir, i) {
+      const order = dir === 'f' ? forwardOrder : reverseOrder;
+      const qid = order[i];
+      const q = qMap[qid];
+      if (!q) {
+        document.getElementById('question').innerHTML = '<h2>Trail Complete! 🏁</h2><p>You have made it all the way around town!</p>';
+        document.getElementById('map-container').innerHTML = '';
+        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Start</button>';
+        return;
+      }
+      const qNum = i + 1;
+      document.getElementById('question').innerHTML = `<h2>Question ${qNum} of ${n}</h2><p>${q.question}</p>`;
       document.getElementById('map-container').innerHTML = '';
       if (q.type === 'multiple') {
-        const opts = q.options.map((opt, i) => `<button onclick="check(${i}, ${q.correct}, ${id})">${opt}</button>`).join('');
+        const opts = q.options.map((opt, j) =>
+          `<button onclick="answerMultiple('${dir}',${i},${j},${q.correct})">${opt}</button>`
+        ).join('');
         document.getElementById('options').innerHTML = opts;
-      } else if (q.type === 'text') {
-        document.getElementById('options').innerHTML = '<input type="text" id="answerInput" placeholder="Type your answer here"><button onclick="checkText(\'' + q.correctAnswer.replace(/'/g, "\\'") + '\', ' + id + ')">Submit</button>';
+      } else {
+        document.getElementById('options').innerHTML =
+          `<input type="text" id="answerInput" placeholder="Type your answer here">` +
+          `<button onclick="answerText('${dir}',${i},'${q.correctAnswer.replace(/'/g, "\\'")}')">Submit</button>`;
       }
     }
-    
-    window.check = function(selected, correct, qid) {
+
+    window.answerMultiple = function(dir, i, selected, correct) {
       if (selected === correct) {
-        window.location.hash = `#reward${qid}`;
+        window.location.hash = '#' + dir + 'reward' + i;
       } else {
         alert('Wrong answer! Try again.');
       }
     };
-    
-    window.checkText = function(correctAnswer, qid) {
-      const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
-      if (userAnswer === correctAnswer.toLowerCase()) {
-        window.location.hash = `#reward${qid}`;
+
+    window.answerText = function(dir, i, correctAnswer) {
+      const val = document.getElementById('answerInput').value.trim().toLowerCase();
+      if (val === correctAnswer.toLowerCase()) {
+        window.location.hash = '#' + dir + 'reward' + i;
       } else {
         alert('Wrong answer! Try again.');
       }
     };
-    
+
+    function showHome() {
+      if (!hasTrailParam) {
+        const trailCards = trailManifest.map(t => `
+          <button class="start-btn" style="background:#6c757d; font-size:16px; padding:14px 20px; text-align:left; align-items:flex-start; justify-content:flex-start; flex-direction:column; gap:6px;" onclick="window.location.search='?trail=${t.id}'">
+            <span style="font-weight:700; color:#fff;">${t.name}</span>
+            <span style="font-size:13px; color:#e9ecef; font-weight:400;">${t.description || 'Trail ' + t.id}</span>
+          </button>`
+        ).join('');
+        document.getElementById('question').innerHTML = `
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="margin: 0 0 6px 0; color: #007bff; font-size: 32px;">🗺️ Location Quiz</h1>
+            <p style="margin: 0; color: #666; font-size: 14px;">Choose a trail to begin</p>
+          </div>
+          <p style="margin: 16px 0; color: #555; font-size: 15px; line-height: 1.6;">
+            Pick a trail below. On the next screen, you can choose whether to walk it forward or reverse.
+          </p>
+        `;
+        document.getElementById('map-container').innerHTML = '';
+        document.getElementById('options').innerHTML = trailCards;
+        return;
+      }
+
+      let reverseStart = '';
+      if (n >= 2 && qMap[forwardOrder[n - 2]] && qMap[forwardOrder[n - 2]].reward) {
+        const r = qMap[forwardOrder[n - 2]].reward;
+        reverseStart = `<span style="display:block; font-size:12px; color:#f8f9fa; margin:0 0 8px 0; font-weight:500;">🚶 Starts at: <strong>${r.title}</strong></span>`;
+      }
+      
+      const selectedMeta = trailManifest.find(t => t.id === selectedTrail);
+      const trailNav = `<div style="margin-top:16px; padding-top:16px; border-top:2px solid #dee2e6;">
+                          <a href="${window.location.pathname}" style="color:#007bff; font-weight:600; text-decoration:none;">← Back to All Trails</a>
+                        </div>`;
+      
+      document.getElementById('question').innerHTML = `
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="margin: 0 0 6px 0; color: #007bff; font-size: 32px;">🗺️ Location Quiz</h1>
+          <p style="margin: 0; color: #666; font-size: 14px;">${selectedMeta ? selectedMeta.name : 'Walk around town and answer questions'}</p>
+        </div>
+        <p style="margin: 16px 0; color: #555; font-size: 15px; line-height: 1.6;">
+          Answer each question to find your next stop. Head to that location in town, and look around to find the answer to the next question.
+        </p>
+        <p style="color: #007bff; font-weight: 600; margin: 16px 0 12px 0; font-size: 14px;">Pick a direction:</p>
+      `;
+      document.getElementById('map-container').innerHTML = '';
+      document.getElementById('options').innerHTML =
+        `<button class="start-btn" onclick="window.location.hash='#fq0'" style="margin-bottom: 10px;">▶️ Start Forward</button>` +
+        `<button class="start-btn" onclick="window.location.hash='#rq0'" style="background: #495057; color:#fff;">${reverseStart}<span style="display: block; color:#fff;">◀️ Start Reverse</span></button>` +
+        trailNav;
+    }
+
     function parseHash() {
-      const hash = window.location.hash;
-      if (!hash) return { type: 'home' };
-      if (hash.startsWith('#reward')) {
-        const qid = parseInt(hash.slice(7));
-        return { type: 'reward', qid };
-      }
-      if (hash.startsWith('#q')) {
-        const qid = parseInt(hash.slice(2));
-        return { type: 'question', qid };
-      }
+      const h = window.location.hash;
+      if (!h || h === '#') return { type: 'home' };
+      const m = h.match(/^#([fr])reward(\d+)$/);
+      if (m) return { type: 'reward', dir: m[1], i: parseInt(m[2]) };
+      const m2 = h.match(/^#([fr])q(\d+)$/);
+      if (m2) return { type: 'question', dir: m2[1], i: parseInt(m2[2]) };
       return { type: 'home' };
     }
-    
+
     function renderPage() {
       const page = parseHash();
       if (page.type === 'home') {
         showHome();
       } else if (page.type === 'question') {
-        showQuestion(page.qid);
+        showQuestion(page.dir, page.i);
       } else if (page.type === 'reward') {
-        showReward(page.qid);
+        const nextI = page.i + 1;
+        const order = page.dir === 'f' ? forwardOrder : reverseOrder;
+        const isLast = nextI >= order.length;
+        const reward = getRewardForIndex(page.dir, page.i);
+        const nextHash = '#' + page.dir + 'q' + nextI;
+        showRewardLocation(reward, nextHash, isLast);
       }
     }
-    
+
     renderPage();
-    
-    window.onhashchange = () => {
-      renderPage();
-    };
+    window.onhashchange = () => renderPage();
   })
   .catch(error => {
     console.error('Error loading questions:', error);

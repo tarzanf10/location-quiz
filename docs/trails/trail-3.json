@@ -1,0 +1,90 @@
+{
+  "name": "Canal & Castle Trail",
+  "description": "Follow the Grand Union Canal and discover Berkhamsted Castle",
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple",
+      "question": "Stand on the road bridge over the Grand Union Canal near the High Street. How many lock gates can you count on the canal lock immediately visible from here?",
+      "options": ["2", "4", "6", "8"],
+      "correct": 1,
+      "reward": {
+        "title": "Berkhamsted Castle — North Gate",
+        "description": "Walk along the canal towpath westward, then turn up to Berkhamsted Castle. Approach from Castle Street and find the English Heritage signage near the moat bridge.",
+        "address": "Castle Street, Berkhamsted, HP4 1LJ",
+        "lat": 51.7627,
+        "lng": -0.5641,
+        "osGrid": "SP 996 082",
+        "w3w": "///wider.rated.sleeps"
+      },
+      "next": 2
+    },
+    {
+      "id": 2,
+      "type": "multiple",
+      "question": "You are at Berkhamsted Castle. The castle has an unusual feature for Norman castles — it has a double moat system. Looking at the earthworks, how many distinct raised mounds (mottes) can you see?",
+      "options": ["One", "Two", "Three", "None — it is completely flat"],
+      "correct": 0,
+      "reward": {
+        "title": "Berkhamsted Station",
+        "description": "Walk back to the High Street and continue east to Berkhamsted Railway Station. Look at the station building and platform signage.",
+        "address": "Station Road, Berkhamsted, HP4 2JJ",
+        "lat": 51.7642,
+        "lng": -0.5604,
+        "osGrid": "SP 999 083",
+        "w3w": "///shops.wider.rings"
+      },
+      "next": 3
+    },
+    {
+      "id": 3,
+      "type": "multiple",
+      "question": "You are at Berkhamsted Station. Which London terminus does this station's mainline trains run to?",
+      "options": ["London Euston", "London Paddington", "London St Pancras", "London Waterloo"],
+      "correct": 0,
+      "reward": {
+        "title": "The Canal Wharf and Boatyard",
+        "description": "Walk back along the High Street and down to the canal. Follow the towpath to the old Canal Wharf area just west of the High Street bridge. Look for the historic mooring posts and BW canal milepost.",
+        "address": "Grand Union Canal, Berkhamsted, HP4 2EE",
+        "lat": 51.7636,
+        "lng": -0.5659,
+        "osGrid": "SP 995 083",
+        "w3w": "///spill.risky.legal"
+      },
+      "next": 4
+    },
+    {
+      "id": 4,
+      "type": "text",
+      "question": "Find the British Waterways (or Canal & River Trust) milepost near the wharf. How many miles does it show to London?",
+      "correctAnswer": "26",
+      "reward": {
+        "title": "Cowroast Lock",
+        "description": "Walk the towpath northward out of town until you reach Cowroast Lock — one of the higher locks on this stretch. Look at the lock number plate on the gate mechanism.",
+        "address": "Cowroast, Tring, HP23 5RF",
+        "lat": 51.7868,
+        "lng": -0.5892,
+        "osGrid": "SP 957 104",
+        "w3w": "///dogs.lamp.drum"
+      },
+      "next": 5
+    },
+    {
+      "id": 5,
+      "type": "multiple",
+      "question": "You are at Cowroast Lock. What is the lock number shown on the metal plate on the top lock gate?",
+      "options": ["Lock 48", "Lock 50", "Lock 52", "Lock 54"],
+      "correct": 1,
+      "reward": {
+        "title": "Back at the Canal Bridge, Berkhamsted",
+        "description": "Walk back along the towpath into town — you've completed the Canal & Castle Trail! 🎉 Return to where you started at the High Street canal bridge.",
+        "address": "Grand Union Canal Bridge, High Street, Berkhamsted, HP4 1AF",
+        "lat": 51.7632,
+        "lng": -0.5644,
+        "osGrid": "SP 996 083",
+        "w3w": "///risks.legal.spill"
+      },
+      "next": null
+    }
+  ]
+}
