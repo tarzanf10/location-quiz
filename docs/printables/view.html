@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Printable View | Location Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; color: #111; }
+    .toolbar { position: sticky; top: 0; z-index: 5; display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 14px; background: #ffffff; border-bottom: 1px solid #ddd; }
+    .toolbar .left { font-size: 14px; color: #444; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn { border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; }
+    .btn.print { background: #007bff; color: #fff; }
+    .btn.back { background: #6c757d; color: #fff; }
+    main { max-width: 900px; margin: 16px auto; padding: 0 12px 20px 12px; }
+    .sheet { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; }
+    h1 { margin: 0 0 12px 0; font-size: 28px; }
+    h2 { margin: 18px 0 8px 0; font-size: 20px; border-top: 1px solid #eee; padding-top: 12px; }
+    p { margin: 6px 0; line-height: 1.45; }
+    hr { border: 0; border-top: 1px dashed #ccc; margin: 14px 0; }
+    .error { background: #fff3f3; color: #9b1c1c; border: 1px solid #efb1b1; border-radius: 8px; padding: 12px; }
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none; }
+      main { margin: 0; max-width: 100%; padding: 0; }
+      .sheet { border: none; border-radius: 0; padding: 10mm; }
+      h2 { page-break-before: auto; }
+      .stop { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <div class="left" id="fileLabel">Loading...</div>
+    <div>
+      <a class="btn back" href="./index.html">Back</a>
+      <button class="btn print" onclick="window.print()">Print now</button>
+    </div>
+  </div>
+
+  <main>
+    <div id="content" class="sheet"></div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get('file') || '';
+    const fileLabel = document.getElementById('fileLabel');
+    const content = document.getElementById('content');
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderMarkdown(md) {
+      const lines = md.replace(/\r\n/g, '\n').split('\n');
+      const out = [];
+      let inStop = false;
+
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+
+        if (!line) {
+          continue;
+        }
+
+        if (line.startsWith('# ')) {
+          if (inStop) { out.push('</section>'); inStop = false; }
+          out.push(`<h1>${escapeHtml(line.slice(2))}</h1>`);
+          continue;
+        }
+
+        if (line.startsWith('## ')) {
+          if (inStop) out.push('</section>');
+          out.push('<section class="stop">');
+          out.push(`<h2>${escapeHtml(line.slice(3))}</h2>`);
+          inStop = true;
+          continue;
+        }
+
+        if (line === '---') {
+          out.push('<hr/>');
+          continue;
+        }
+
+        const m = line.match(/^\*\*(.+?)\*\*:\s*(.*)$/);
+        if (m) {
+          out.push(`<p><strong>${escapeHtml(m[1])}:</strong> ${escapeHtml(m[2])}</p>`);
+          continue;
+        }
+
+        out.push(`<p>${escapeHtml(line)}</p>`);
+      }
+
+      if (inStop) out.push('</section>');
+      return out.join('\n');
+    }
+
+    if (!file || !/^[-a-zA-Z0-9_\.]+\.md$/.test(file)) {
+      fileLabel.textContent = 'Invalid printable file';
+      content.innerHTML = '<div class="error">Printable file was not provided or is invalid.</div>';
+    } else {
+      fileLabel.textContent = file;
+      fetch('./' + file)
+        .then(r => {
+          if (!r.ok) throw new Error('Missing file');
+          return r.text();
+        })
+        .then(md => {
+          content.innerHTML = renderMarkdown(md);
+        })
+        .catch(() => {
+          content.innerHTML = '<div class="error">Could not load printable content. Please go back and try again.</div>';
+        });
+    }
+  </script>
+</body>
+</html>

@@ -68,6 +68,66 @@ cp "path/to/downloaded/trail-1.json" docs/trails/trail-1.json
 
 ---
 
+## Optional: Convert CSV to Trail JSON (PowerShell)
+
+If your questions are in CSV format, you can convert them automatically.
+
+### 1) Save your CSV in this format
+
+```csv
+id,type,question,correctAnswer,title,description,address,lat,lng,osGrid,w3w
+1,text,Example question one,Answer 1,Location A,Clue for the next stop,"123 High Street, Berkhamsted, HP4 1AA",51.760000,-0.560000,SP 99000 07800,///example.words.here
+2,text,Example question two,Answer 2,Location B,Look for the blue plaque,"125 High Street, Berkhamsted, HP4 1AB",51.761000,-0.561000,SP 99100 07900,///other.words.here
+```
+
+### 2) Run the converter script
+
+```powershell
+./convert-trail-csv.ps1 -InputCsv "Trail_2.csv" -OutputJson "docs/trails/trail-6.json" -TrailName "My Trail" -TrailDescription "Imported from CSV" -Register
+```
+
+### 3) Useful options
+
+- `-Register` adds the new filename to `docs/trails/trails.json`
+- `-Overwrite` allows replacing an existing output file
+- If you omit `-OutputJson`, the script auto-picks the next `trail-N.json`
+
+### 4) If PowerShell blocks script execution
+
+Some machines enforce script restrictions. In that case, run this in the same folder:
+
+```powershell
+$code = Get-Content "./convert-trail-csv.ps1" -Raw
+$scriptBlock = [ScriptBlock]::Create($code)
+& $scriptBlock -InputCsv "Trail_2.csv" -OutputJson "docs/trails/trail-6.json" -TrailName "My Trail" -TrailDescription "Imported from CSV" -Register
+```
+
+---
+
+## Printables from the Website
+
+Printable sheets are available on a dedicated page:
+
+- `/printables/`
+
+### How to print
+
+1. Open `/printables/` on your site
+2. Choose your trail
+3. Click either **Questions only** or **With answers**
+4. When it opens, press `Ctrl+P` (Windows) or `Cmd+P` (Mac) to print
+
+### Direct URL format (optional)
+
+If needed, you can still open printables directly by URL:
+
+- `.../printables/trail-4-questions.md`
+- `.../printables/trail-4-with-answers.md`
+- `.../printables/trail-5-questions.md`
+- `.../printables/trail-5-with-answers.md`
+
+---
+
 ## Step 5: Check the File is Valid
 
 1. Open the updated `docs/questions.json` in VS Code

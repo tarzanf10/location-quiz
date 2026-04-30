@@ -20,18 +20,26 @@ fetch('./trails/trails.json')
     files.map((file, i) =>
       fetch('./trails/' + file)
         .then(r => r.json())
-        .then(d => ({ id: i + 1, name: d.name || `Trail ${i + 1}`, description: d.description || '', questions: Array.isArray(d) ? d : (d.questions || []) }))
-        .catch(() => ({ id: i + 1, name: `Trail ${i + 1}`, description: '', questions: [] }))
+        .then(d => ({
+          id: i + 1,
+          fileName: file,
+          name: d.name || `Trail ${i + 1}`,
+          description: d.description || '',
+          start: Array.isArray(d) ? null : (d.start || null),
+          questions: Array.isArray(d) ? d : (d.questions || [])
+        }))
+        .catch(() => ({ id: i + 1, fileName: file, name: `Trail ${i + 1}`, description: '', start: null, questions: [] }))
     )
   ))
   .then(allTrails => {
-    trailManifest = allTrails.map(({ id, name, description }) => ({ id, name, description }));
+    trailManifest = allTrails.map(({ id, fileName, name, description }) => ({ id, fileName, name, description }));
     const trail = allTrails.find(t => t.id === selectedTrail) || allTrails[0];
     const questions = trail ? trail.questions : [];
     if (!questions.length) throw new Error('No questions found for this trail');
-    return questions;
+    return trail;
   })
-  .then(questions => {
+  .then(trail => {
+    const questions = trail.questions;
     const qMap = {};
     questions.forEach(q => qMap[q.id] = q);
 
@@ -66,46 +74,95 @@ fetch('./trails/trails.json')
       }
     }
 
-    function showRewardLocation(reward, nextHash, isLast) {
-      if (!reward) {
-        document.getElementById('question').innerHTML = '<h2>Trail Complete! 🏁</h2><p>You have made it all the way around town!</p>';
-        document.getElementById('map-container').innerHTML = '';
-        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Start</button>';
-        return;
+    function getConfiguredStartLocation(dir) {
+      if (!trail.start) return null;
+      if (dir === 'f') {
+        return trail.start.forward || trail.start.f || trail.start.location || trail.start;
       }
-      const w3w = reward.w3w || reward.what3words || reward.what3Words;
-      const w3wLine = w3w
-        ? `<div style="margin-top:8px;"><strong>What3Words:</strong> <a href="https://what3words.com/${String(w3w).replace('///','')}\" target="_blank" style="color:#e11f26;">${w3w}</a></div>`
-        : '';
-      const html = `
-        <h2>Correct — here is your next stop 🎉</h2>
-        <p>Head to this location in town. Once you arrive, you should be able to find the answer to the next question.</p>
-        <div style="background-color: #e7f3ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
-          <h3 style="margin-top: 0; color: #0056b3;">${reward.title}</h3>
-          <p>${reward.description}</p>
-          <p style="color: #666; font-weight: bold;">📍 ${reward.address}</p>
-          <div class="coordinates">
-            <strong>Coordinates:</strong><br>
-            Latitude: ${reward.lat}<br>
-            Longitude: ${reward.lng}<br>
-            <br>
-            <strong>OS Grid Reference:</strong> ${reward.osGrid}
-            ${w3wLine}
-          </div>
-        </div>`;
-      document.getElementById('question').innerHTML = html;
+      return trail.start.reverse || trail.start.r || null;
+    }
+
+    function getStartLocation(dir) {
+      const configuredStart = getConfiguredStartLocation(dir);
+      if (configuredStart) return configuredStart;
+      if (dir === 'f') {
+        return qMap[forwardOrder[n - 1]] ? qMap[forwardOrder[n - 1]].reward : null;
+      }
+      if (n >= 2 && qMap[forwardOrder[n - 2]]) {
+        return qMap[forwardOrder[n - 2]].reward;
+      }
+      return qMap[forwardOrder[n - 1]] ? qMap[forwardOrder[n - 1]].reward : null;
+    }
+
+    function renderLocationMap(location) {
       document.getElementById('map-container').innerHTML = '<div id="map"></div>';
       setTimeout(() => {
         if (mapInstance) mapInstance.remove();
-        mapInstance = L.map('map').setView([reward.lat, reward.lng], 15);
+        mapInstance = L.map('map').setView([location.lat, location.lng], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '© OpenStreetMap contributors', maxZoom: 19
         }).addTo(mapInstance);
-        L.marker([reward.lat, reward.lng]).addTo(mapInstance)
-          .bindPopup('<b>' + reward.title + '</b>').openPopup();
+        L.marker([location.lat, location.lng]).addTo(mapInstance)
+          .bindPopup('<b>' + location.title + '</b>').openPopup();
       }, 100);
+    }
+
+    function getLocationHtml(heading, intro, location) {
+      const w3w = location.w3w || location.what3words || location.what3Words;
+      const w3wLine = w3w
+        ? `<div style="margin-top:8px;"><strong>What3Words:</strong> <a href="https://what3words.com/${String(w3w).replace('///','')}" target="_blank" style="color:#e11f26;">${w3w}</a></div>`
+        : '';
+      return `
+        <h2>${heading}</h2>
+        <p>${intro}</p>
+        <div style="background-color: #e7f3ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
+          <h3 style="margin-top: 0; color: #0056b3;">${location.title}</h3>
+          <p>${location.description || 'Head here to continue the trail.'}</p>
+          <p style="color: #666; font-weight: bold;">📍 ${location.address}</p>
+          <div class="coordinates">
+            <strong>Coordinates:</strong><br>
+            Latitude: ${location.lat}<br>
+            Longitude: ${location.lng}<br>
+            <br>
+            <strong>OS Grid Reference:</strong> ${location.osGrid || '-'}
+            ${w3wLine}
+          </div>
+        </div>`;
+    }
+
+    function showStartLocation(dir) {
+      const startLocation = getStartLocation(dir);
+      if (!startLocation) {
+        window.location.hash = '#' + dir + 'q0';
+        return;
+      }
+      const directionLabel = dir === 'f' ? 'forward' : 'reverse';
+      document.getElementById('question').innerHTML = getLocationHtml(
+        'Start here 📍',
+        `Head to this location to begin the ${directionLabel} trail. Once you arrive, open the first question.`,
+        startLocation
+      );
+      renderLocationMap(startLocation);
+      document.getElementById('options').innerHTML =
+        `<button onclick="window.location.hash = '#${dir}q0'">I'm at the starting location</button>` +
+        `<button onclick="window.location.hash = ''" style="background:#6c757d;">Choose a different direction</button>`;
+    }
+
+    function showRewardLocation(reward, nextHash, isLast) {
+      if (!reward) {
+        document.getElementById('question').innerHTML = '<h2>Well done! 🏁</h2><p>Please go back to base.</p>';
+        document.getElementById('map-container').innerHTML = '';
+        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Base</button>';
+        return;
+      }
+      document.getElementById('question').innerHTML = getLocationHtml(
+        'Correct — here is your next stop 🎉',
+        'Head to this location in town. Once you arrive, you should be able to find the answer to the next question.',
+        reward
+      );
+      renderLocationMap(reward);
       if (isLast) {
-        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Finish Trail</button>';
+        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Base</button>';
       } else {
         document.getElementById('options').innerHTML =
           '<button onclick="window.location.hash = \'' + nextHash + '\'">I\'m ready for the next question</button>';
@@ -117,9 +174,9 @@ fetch('./trails/trails.json')
       const qid = order[i];
       const q = qMap[qid];
       if (!q) {
-        document.getElementById('question').innerHTML = '<h2>Trail Complete! 🏁</h2><p>You have made it all the way around town!</p>';
+        document.getElementById('question').innerHTML = '<h2>Well done! 🏁</h2><p>Please go back to base.</p>';
         document.getElementById('map-container').innerHTML = '';
-        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Start</button>';
+        document.getElementById('options').innerHTML = '<button onclick="window.location.hash = \'\'">Back to Base</button>';
         return;
       }
       const qNum = i + 1;
@@ -177,11 +234,14 @@ fetch('./trails/trails.json')
       }
 
       // Starting location for reverse trail = reward of second-to-last forward question
-      let reverseStart = '';
-      if (n >= 2 && qMap[forwardOrder[n - 2]] && qMap[forwardOrder[n - 2]].reward) {
-        const r = qMap[forwardOrder[n - 2]].reward;
-        reverseStart = `<span style="display:block; font-size:12px; color:#f8f9fa; margin:0 0 8px 0; font-weight:500;">🚶 Starts at: <strong>${r.title}</strong></span>`;
-      }
+      const forwardStart = getStartLocation('f');
+      const reverseStart = getStartLocation('r');
+      const forwardStartLabel = forwardStart
+        ? `<span style="display:block; font-size:12px; color:#f8f9fa; margin:0 0 8px 0; font-weight:500;">🚶 Starts at: <strong>${forwardStart.title}</strong></span>`
+        : '';
+      const reverseStartLabel = reverseStart
+        ? `<span style="display:block; font-size:12px; color:#f8f9fa; margin:0 0 8px 0; font-weight:500;">🚶 Starts at: <strong>${reverseStart.title}</strong></span>`
+        : '';
       
       const selectedMeta = trailManifest.find(t => t.id === selectedTrail);
       const trailNav = `<div style="margin-top:16px; padding-top:16px; border-top:2px solid #dee2e6;">
@@ -200,14 +260,16 @@ fetch('./trails/trails.json')
       `;
       document.getElementById('map-container').innerHTML = '';
       document.getElementById('options').innerHTML =
-        `<button class="start-btn" onclick="window.location.hash='#fq0'" style="margin-bottom: 10px;">▶️ Start Forward</button>` +
-        `<button class="start-btn" onclick="window.location.hash='#rq0'" style="background: #495057; color:#fff;">${reverseStart}<span style="display: block; color:#fff;">◀️ Start Reverse</span></button>` +
+        `<button class="start-btn" onclick="window.location.hash='#fstart'" style="margin-bottom: 10px;">${forwardStartLabel}<span style="display: block; color:#fff;">▶️ Start Forward</span></button>` +
+        `<button class="start-btn" onclick="window.location.hash='#rstart'" style="background: #495057; color:#fff;">${reverseStartLabel}<span style="display: block; color:#fff;">◀️ Start Reverse</span></button>` +
         trailNav;
     }
 
     function parseHash() {
       const h = window.location.hash;
       if (!h || h === '#') return { type: 'home' };
+      const startMatch = h.match(/^#([fr])start$/);
+      if (startMatch) return { type: 'start', dir: startMatch[1] };
       const m = h.match(/^#([fr])reward(\d+)$/);
       if (m) return { type: 'reward', dir: m[1], i: parseInt(m[2]) };
       const m2 = h.match(/^#([fr])q(\d+)$/);
@@ -219,6 +281,8 @@ fetch('./trails/trails.json')
       const page = parseHash();
       if (page.type === 'home') {
         showHome();
+      } else if (page.type === 'start') {
+        showStartLocation(page.dir);
       } else if (page.type === 'question') {
         showQuestion(page.dir, page.i);
       } else if (page.type === 'reward') {

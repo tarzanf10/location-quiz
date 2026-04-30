@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Printables | Location Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+    .card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+    h1 { margin-top: 0; }
+    .links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    a.btn { display: inline-block; text-decoration: none; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 14px; }
+    a.q { background: #007bff; }
+    a.a { background: #6c757d; }
+    .back { margin-top: 14px; }
+  </style>
+</head>
+<body>
+  <h1>🖨️ Printable Sheets</h1>
+  <p>Select a printable version, then use your browser print option (<strong>Ctrl+P</strong>).</p>
+
+  <div id="printable-list"></div>
+
+  <div class="back">
+    <a href="../">← Back to quiz home</a>
+  </div>
+
+  <script>
+    const printableList = document.getElementById('printable-list');
+
+    function renderCard(name, fileName) {
+      const base = fileName.replace(/\.json$/i, '');
+      return `
+        <div class="card">
+          <strong>${name}</strong>
+          <div class="links">
+            <a class="btn q" href="./view.html?file=${encodeURIComponent(base + '-questions.md')}" target="_blank">Questions only</a>
+            <a class="btn a" href="./view.html?file=${encodeURIComponent(base + '-with-answers.md')}" target="_blank">With answers</a>
+          </div>
+        </div>`;
+    }
+
+    fetch('../trails/trails.json')
+      .then(response => response.json())
+      .then(files => Promise.all(
+        files.map((file, i) =>
+          fetch('../trails/' + file)
+            .then(r => r.json())
+            .then(data => ({
+              file,
+              name: (data && data.name) ? data.name : `Trail ${i + 1}`
+            }))
+            .catch(() => ({ file, name: `Trail ${i + 1}` }))
+        )
+      ))
+      .then(trails => {
+        printableList.innerHTML = trails.map(t => renderCard(t.name, t.file)).join('');
+      })
+      .catch(() => {
+        printableList.innerHTML = '<div class="card">Could not load printables list. Please refresh the page.</div>';
+      });
+  </script>
+</body>
+</html>

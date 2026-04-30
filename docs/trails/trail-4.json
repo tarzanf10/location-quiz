@@ -1,0 +1,646 @@
+{
+  "name": "Town Trail Quiz 1",
+  "description": "A 40-stop text quiz trail imported from Trail_1.csv",
+  "questions": [
+    {
+      "id": 1,
+      "type": "text",
+      "question": "Keep Phone number at The Pightle House with no space",
+      "correctAnswer": "01442833100",
+      "reward": {
+        "title": "Location B",
+        "description": "A builing on the north side of stret",
+        "address": "Lots of Rice, 1, Holliday Street, Ashlyns Estate, HP4 2EE",
+        "lat": 51.758557,
+        "lng": -0.558599,
+        "osGrid": "SP 99582 07635",
+        "w3w": "///centrally.deny.unpacked"
+      },
+      "next": 2
+    },
+    {
+      "id": 2,
+      "type": "text",
+      "question": "when was coleShill house built",
+      "correctAnswer": "1882",
+      "reward": {
+        "title": "Location C",
+        "description": "By the graveyard",
+        "address": "Hilltop Road, Ashlyns Estate, HP4 2HH",
+        "lat": 51.757075,
+        "lng": -0.560996,
+        "osGrid": "SP 99419 07467",
+        "w3w": "///ringers.buyers.wove"
+      },
+      "next": 3
+    },
+    {
+      "id": 3,
+      "type": "text",
+      "question": "UK`s    ??  favourite parks",
+      "correctAnswer": "10",
+      "reward": {
+        "title": "Location D",
+        "description": "I the Graveyard",
+        "address": "Rectory Lane, Ashlyns Estate, HP4 2DH",
+        "lat": 51.757856,
+        "lng": -0.561258,
+        "osGrid": "SP 99400 07553",
+        "w3w": "///flexibly.educated.cobbled"
+      },
+      "next": 4
+    },
+    {
+      "id": 4,
+      "type": "text",
+      "question": "In theyear of our Lord",
+      "correctAnswer": "1812",
+      "reward": {
+        "title": "Location E",
+        "description": "I the Graveyard",
+        "address": "Three Close Lane, Ashlyns Estate, HP4 2FG",
+        "lat": 51.758018,
+        "lng": -0.560778,
+        "osGrid": "SP 99432 07572",
+        "w3w": "///enlighten.strutted.collision"
+      },
+      "next": 5
+    },
+    {
+      "id": 5,
+      "type": "text",
+      "question": "Chris Stoke What month",
+      "correctAnswer": "September",
+      "reward": {
+        "title": "Location F",
+        "description": "In the electric box",
+        "address": "Rectory Lane, Ashlyns Estate, HP4 2JF",
+        "lat": 51.758665,
+        "lng": -0.561301,
+        "osGrid": "SP 99395 07643",
+        "w3w": "///polka.handsets.makeup"
+      },
+      "next": 6
+    },
+    {
+      "id": 6,
+      "type": "text",
+      "question": "What is the Red number on the meeter",
+      "correctAnswer": "8",
+      "reward": {
+        "title": "Location G",
+        "description": "High st",
+        "address": "Dower House Coffee, 108, High Street, Ashlyns Estate, HP4 2BL",
+        "lat": 51.759285,
+        "lng": -0.560909,
+        "osGrid": "SP 99421 07713",
+        "w3w": "///gains.blemishes.pacifist"
+      },
+      "next": 7
+    },
+    {
+      "id": 7,
+      "type": "text",
+      "question": "Whos Manor",
+      "correctAnswer": "Pilkington",
+      "reward": {
+        "title": "Location H",
+        "description": "High st",
+        "address": "Dower House Coffee, 108, High Street, Ashlyns Estate, HP4 2BL",
+        "lat": 51.759231,
+        "lng": -0.56104,
+        "osGrid": "SP 99412 07706",
+        "w3w": "///pointer.conveying.entire"
+      },
+      "next": 8
+    },
+    {
+      "id": 8,
+      "type": "text",
+      "question": "Churchill house number",
+      "correctAnswer": "107",
+      "reward": {
+        "title": "Location I",
+        "description": "High st",
+        "address": "Fred and Ginger Coffee, 125, High Street, Ashlyns Estate, HP4 2DJ",
+        "lat": 51.759554,
+        "lng": -0.562304,
+        "osGrid": "SP 99324 07741",
+        "w3w": "///touched.carbonate.plugs"
+      },
+      "next": 9
+    },
+    {
+      "id": 9,
+      "type": "text",
+      "question": "Red house what FM year",
+      "correctAnswer": "1832",
+      "reward": {
+        "title": "Location J",
+        "description": "High st",
+        "address": "Dean Incent's House, High Street, Ashlyns Estate, HP4 2DJ",
+        "lat": 51.759554,
+        "lng": -0.562347,
+        "osGrid": "SP 99321 07741",
+        "w3w": "///fault.demanding.nearing"
+      },
+      "next": 10
+    },
+    {
+      "id": 10,
+      "type": "text",
+      "question": "Phone box number with no space",
+      "correctAnswer": "01442863721",
+      "reward": {
+        "title": "Location K",
+        "description": "Back Lane",
+        "address": "Church Lane, Ashlyns Estate, HP4 2AX",
+        "lat": 51.759851,
+        "lng": -0.562217,
+        "osGrid": "SP 99329 07774",
+        "w3w": "///nearing.cuddling.intention"
+      },
+      "next": 11
+    },
+    {
+      "id": 11,
+      "type": "text",
+      "question": "The Courthouse what century blue plaque",
+      "correctAnswer": "16th",
+      "reward": {
+        "title": "Location L",
+        "description": "High st",
+        "address": "Hanako Flowers, 140, High Street, Ashlyns Estate, HP4 3AT",
+        "lat": 51.759743,
+        "lng": -0.562783,
+        "osGrid": "SP 99290 07761",
+        "w3w": "///rectangular.tilt.musical"
+      },
+      "next": 12
+    },
+    {
+      "id": 12,
+      "type": "text",
+      "question": "Blue Plaque No the swan",
+      "correctAnswer": "17",
+      "reward": {
+        "title": "Location M",
+        "description": "High st",
+        "address": "The Lounge by Graze Life, 154-156, High Street, Ashlyns Estate, HP4 3AT",
+        "lat": 51.759905,
+        "lng": -0.56335,
+        "osGrid": "SP 99251 07778",
+        "w3w": "///covertly.fast.spilling"
+      },
+      "next": 13
+    },
+    {
+      "id": 13,
+      "type": "text",
+      "question": "The Kings arm what century blue plaque",
+      "correctAnswer": "18th",
+      "reward": {
+        "title": "Location N",
+        "description": "High st",
+        "address": "Black Goo, 134, High Street, Ashlyns Estate, HP4 3AT",
+        "lat": 51.759635,
+        "lng": -0.562565,
+        "osGrid": "SP 99306 07749",
+        "w3w": "///unspoiled.push.brew"
+      },
+      "next": 14
+    },
+    {
+      "id": 14,
+      "type": "text",
+      "question": "parking Meeter number (White Pen marker)",
+      "correctAnswer": "8",
+      "reward": {
+        "title": "Location O",
+        "description": "High st",
+        "address": "Hanako Flowers, 140, High Street, Ashlyns Estate, HP4 3AT",
+        "lat": 51.759878,
+        "lng": -0.562914,
+        "osGrid": "SP 99281 07776",
+        "w3w": "///shatters.stone.soap"
+      },
+      "next": 15
+    },
+    {
+      "id": 15,
+      "type": "text",
+      "question": "3 Digit yellow number on lamp post",
+      "correctAnswer": "568",
+      "reward": {
+        "title": "Location P",
+        "description": "Civice center",
+        "address": "Tabure, 157-159, High Street, Ashlyns Estate, HP4 3HB",
+        "lat": 51.760174,
+        "lng": -0.564004,
+        "osGrid": "SP 99205 07807",
+        "w3w": "///since.beep.reject"
+      },
+      "next": 16
+    },
+    {
+      "id": 16,
+      "type": "text",
+      "question": "what day  of the week in april was the jazz",
+      "correctAnswer": "Saturday",
+      "reward": {
+        "title": "Location Q",
+        "description": "Civice center",
+        "address": "Tabure, 157-159, High Street, Ashlyns Estate, HP4 3HB",
+        "lat": 51.760174,
+        "lng": -0.564004,
+        "osGrid": "SP 99205 07807",
+        "w3w": "///since.beep.reject"
+      },
+      "next": 17
+    },
+    {
+      "id": 17,
+      "type": "text",
+      "question": "how many windows on the Civic Centre",
+      "correctAnswer": "13",
+      "reward": {
+        "title": "Location R",
+        "description": "Waterstone`s",
+        "address": "172-176, High Street, Ashlyns Estate, HP4 3HE",
+        "lat": 51.760255,
+        "lng": -0.563786,
+        "osGrid": "SP 99220 07817",
+        "w3w": "///softly.spill.pickup"
+      },
+      "next": 18
+    },
+    {
+      "id": 18,
+      "type": "text",
+      "question": "The Red and White Alarm Name",
+      "correctAnswer": "Kings",
+      "reward": {
+        "title": "Location S",
+        "description": "High st",
+        "address": "Berkhamsted Police Station, High Street, Ashlyns Estate, HP4 3HE",
+        "lat": 51.76012,
+        "lng": -0.564047,
+        "osGrid": "SP 99202 07801",
+        "w3w": "///tarnished.lorry.sedated"
+      },
+      "next": 19
+    },
+    {
+      "id": 19,
+      "type": "text",
+      "question": "what is the black elliptical plate number next to the door on bells",
+      "correctAnswer": "163",
+      "reward": {
+        "title": "Location T",
+        "description": "Ciente",
+        "address": "Lussmans Berkhamsted, 163-165, High Street, Ashlyns Estate, HP4 3HB",
+        "lat": 51.760201,
+        "lng": -0.564222,
+        "osGrid": "SP 99190 07810",
+        "w3w": "///shrimps.commended.presenter"
+      },
+      "next": 20
+    },
+    {
+      "id": 20,
+      "type": "text",
+      "question": "what is the max stay hours for parking",
+      "correctAnswer": "1",
+      "reward": {
+        "title": "Location U",
+        "description": "Sterling Esata agents",
+        "address": "Town Hall, High Street, Ashlyns Estate, HP4 3HE",
+        "lat": 51.760363,
+        "lng": -0.564614,
+        "osGrid": "SP 99163 07827",
+        "w3w": "///bulbs.owners.voices"
+      },
+      "next": 21
+    },
+    {
+      "id": 21,
+      "type": "text",
+      "question": "Residential sales & ??",
+      "correctAnswer": "lettings",
+      "reward": {
+        "title": "Location V",
+        "description": "Town hall",
+        "address": "Berkhamsted Town Hall, High Street, Ashlyns Estate, HP4 3AP",
+        "lat": 51.760578,
+        "lng": -0.564832,
+        "osGrid": "SP 99147 07851",
+        "w3w": "///campus.conga.dice"
+      },
+      "next": 22
+    },
+    {
+      "id": 22,
+      "type": "text",
+      "question": "date on the date on the stone shield",
+      "correctAnswer": "1859",
+      "reward": {
+        "title": "Location W",
+        "description": "Betfred Parking meeter",
+        "address": "Town Hall, High Street, Ashlyns Estate, HP4 3HE",
+        "lat": 51.760363,
+        "lng": -0.564614,
+        "osGrid": "SP 99163 07827",
+        "w3w": "///bulbs.owners.voices"
+      },
+      "next": 23
+    },
+    {
+      "id": 23,
+      "type": "text",
+      "question": "on the back of the metre the number below Wawoo ",
+      "correctAnswer": "6",
+      "reward": {
+        "title": "Location X",
+        "description": "HSBC",
+        "address": "Prime, 196, High Street, Ashlyns Estate, HP4 3BA",
+        "lat": 51.760498,
+        "lng": -0.564919,
+        "osGrid": "SP 99141 07842",
+        "w3w": "///remission.couriers.words"
+      },
+      "next": 24
+    },
+    {
+      "id": 24,
+      "type": "text",
+      "question": "What is the number on the green box outside",
+      "correctAnswer": "15",
+      "reward": {
+        "title": "Location Y",
+        "description": "vinegar hill",
+        "address": "Per Tutti, 222, High Street, Ashlyns Estate, HP4 1AG",
+        "lat": 51.760821,
+        "lng": -0.565747,
+        "osGrid": "SP 99083 07877",
+        "w3w": "///village.defensive.crusted"
+      },
+      "next": 25
+    },
+    {
+      "id": 25,
+      "type": "text",
+      "question": "? cowper's school",
+      "correctAnswer": "william",
+      "reward": {
+        "title": "Location Z",
+        "description": "Per Tutti",
+        "address": "Per Tutti, 222, High Street, Ashlyns Estate, HP4 1AG",
+        "lat": 51.760902,
+        "lng": -0.566009,
+        "osGrid": "SP 99065 07886",
+        "w3w": "///question.existence.fear"
+      },
+      "next": 26
+    },
+    {
+      "id": 26,
+      "type": "text",
+      "question": "what colour are the gutters",
+      "correctAnswer": "white",
+      "reward": {
+        "title": "Location AA",
+        "description": "old nat west building",
+        "address": "Kings Road, High Street, Ashlyns Estate, HP4 1FD",
+        "lat": 51.760848,
+        "lng": -0.566226,
+        "osGrid": "SP 99050 07879",
+        "w3w": "///unwraps.cuts.rebounded"
+      },
+      "next": 27
+    },
+    {
+      "id": 27,
+      "type": "text",
+      "question": "what is the Number on the lap post",
+      "correctAnswer": "601",
+      "reward": {
+        "title": "Location AB",
+        "description": "Simmons",
+        "address": "Per Tutti, 222, High Street, Ashlyns Estate, HP4 1AG",
+        "lat": 51.760902,
+        "lng": -0.566009,
+        "osGrid": "SP 99065 07886",
+        "w3w": "///question.existence.fear"
+      },
+      "next": 28
+    },
+    {
+      "id": 28,
+      "type": "text",
+      "question": "what type of vicals can park out side  here mon-fri for loading",
+      "correctAnswer": "goods",
+      "reward": {
+        "title": "Location AC",
+        "description": "Dickman",
+        "address": "Caffè Nero, 230, High Street, Ashlyns Estate, HP4 1BP",
+        "lat": 51.760983,
+        "lng": -0.56627,
+        "osGrid": "SP 99047 07894",
+        "w3w": "///mankind.spinners.finely"
+      },
+      "next": 29
+    },
+    {
+      "id": 29,
+      "type": "text",
+      "question": "house name above the door",
+      "correctAnswer": "Linden House",
+      "reward": {
+        "title": "Location AD",
+        "description": "High st",
+        "address": "Coral, High Street, Ashlyns Estate, HP4 1FD",
+        "lat": 51.761225,
+        "lng": -0.567447,
+        "osGrid": "SP 98965 07920",
+        "w3w": "///eyeliner.harmlessly.pounds"
+      },
+      "next": 30
+    },
+    {
+      "id": 30,
+      "type": "text",
+      "question": "what shop is between Epicure and flooring",
+      "correctAnswer": "her",
+      "reward": {
+        "title": "Location AE",
+        "description": "Rober martell & parners",
+        "address": "Kings Road, High Street, Ashlyns Estate, HP4 1FD",
+        "lat": 51.761333,
+        "lng": -0.567316,
+        "osGrid": "SP 98974 07932",
+        "w3w": "///tablets.police.slung"
+      },
+      "next": 31
+    },
+    {
+      "id": 31,
+      "type": "text",
+      "question": "what's the name of their alarm company",
+      "correctAnswer": "ADT",
+      "reward": {
+        "title": "Location AF",
+        "description": "The Almshouses",
+        "address": "235, High Street, Ashlyns Estate, HP4 1AB",
+        "lat": 51.761414,
+        "lng": -0.567752,
+        "osGrid": "SP 98944 07940",
+        "w3w": "///dumpy.triads.megawatt"
+      },
+      "next": 32
+    },
+    {
+      "id": 32,
+      "type": "text",
+      "question": "when were thay built",
+      "correctAnswer": "1684",
+      "reward": {
+        "title": "Location AG",
+        "description": "Camilla Terrace",
+        "address": "Camilla House, 251, High Street, Ashlyns Estate, HP4 1AB",
+        "lat": 51.761629,
+        "lng": -0.568362,
+        "osGrid": "SP 98901 07963",
+        "w3w": "///tweeted.bleat.dignify"
+      },
+      "next": 33
+    },
+    {
+      "id": 33,
+      "type": "text",
+      "question": "what colour is the door of 255",
+      "correctAnswer": "yellow",
+      "reward": {
+        "title": "Location AH",
+        "description": "Kwik-fit",
+        "address": "Malcolm Jones and & Metcalfe, High Street, Ashlyns Estate, HP4 1FD",
+        "lat": 51.76171,
+        "lng": -0.568406,
+        "osGrid": "SP 98898 07972",
+        "w3w": "///slam.surfacing.crank"
+      },
+      "next": 34
+    },
+    {
+      "id": 34,
+      "type": "text",
+      "question": "The phone pole serial number on aluminium plate",
+      "correctAnswer": "CBZHZCZU",
+      "reward": {
+        "title": "Location AI",
+        "description": "Giggling Squid",
+        "address": "Giggling Squid, 296-298, High Street, Ashlyns Estate, HP4 1AH",
+        "lat": 51.761953,
+        "lng": -0.569059,
+        "osGrid": "SP 98852 07998",
+        "w3w": "///bids.swerving.logo"
+      },
+      "next": 35
+    },
+    {
+      "id": 35,
+      "type": "text",
+      "question": "The ??? house",
+      "correctAnswer": "monks",
+      "reward": {
+        "title": "Location AJ",
+        "description": "M & S",
+        "address": "M&S Foodhall, 300, High Street, Ashlyns Estate, HP4 1ZZ",
+        "lat": 51.762061,
+        "lng": -0.569321,
+        "osGrid": "SP 98834 08010",
+        "w3w": "///anthems.harmony.passwords"
+      },
+      "next": 36
+    },
+    {
+      "id": 36,
+      "type": "text",
+      "question": "E R when was it built",
+      "correctAnswer": "1958",
+      "reward": {
+        "title": "Location AK",
+        "description": "Pizza Express",
+        "address": "PizzaExpress, 300, High Street, Ashlyns Estate, HP4 1ZZ",
+        "lat": 51.762276,
+        "lng": -0.5698,
+        "osGrid": "SP 98800 08033",
+        "w3w": "///fruits.cheeses.keen"
+      },
+      "next": 37
+    },
+    {
+      "id": 37,
+      "type": "text",
+      "question": "street number",
+      "correctAnswer": "300",
+      "reward": {
+        "title": "Location AL",
+        "description": "Harrowell & Atkins",
+        "address": "The George, 261, High Street, Ashlyns Estate, HP4 1AB",
+        "lat": 51.761791,
+        "lng": -0.568842,
+        "osGrid": "SP 98868 07981",
+        "w3w": "///ramming.bank.stealthier"
+      },
+      "next": 38
+    },
+    {
+      "id": 38,
+      "type": "text",
+      "question": "Betty ???",
+      "correctAnswer": "james",
+      "reward": {
+        "title": "Location AM",
+        "description": "The Lamb",
+        "address": "Giggling Squid, 296-298, High Street, Ashlyns Estate, HP4 1AH",
+        "lat": 51.761872,
+        "lng": -0.569147,
+        "osGrid": "SP 98846 07989",
+        "w3w": "///cosmic.invisible.rush"
+      },
+      "next": 39
+    },
+    {
+      "id": 39,
+      "type": "text",
+      "question": "whats free",
+      "correctAnswer": "wifi",
+      "reward": {
+        "title": "Location AN",
+        "description": "Menspire",
+        "address": "Purple Menswear, High Street, Ashlyns Estate, HP4 1BW",
+        "lat": 51.762249,
+        "lng": -0.57028,
+        "osGrid": "SP 98767 08030",
+        "w3w": "///abstracts.scouting.ranches"
+      },
+      "next": 40
+    },
+    {
+      "id": 40,
+      "type": "text",
+      "question": "what is the Number on the lap post",
+      "correctAnswer": "632",
+      "reward": {
+        "title": "Location A",
+        "description": "Cream cloure building",
+        "address": "High Street, Ashlyns Estate, HP4 2BP",
+        "lat": 51.75818,
+        "lng": -0.557858,
+        "osGrid": "SP 99634 07594",
+        "w3w": "///parties.deriving.paraded"
+      },
+      "next": null
+    }
+  ]
+}
